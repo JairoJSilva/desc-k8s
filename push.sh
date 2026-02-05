@@ -1,16 +1,16 @@
 #!/bin/bash
 
-# Verifica se está em um repositório git
+# Verifica se está em um repositório Git
 if [ ! -d ".git" ]; then
   echo "❌ Este diretório não é um repositório Git."
   exit 1
 fi
 
-# Solicita mensagem do commit
+# Pergunta mensagem do commit
 read -p "Digite a mensagem do commit: " COMMIT_MSG
 
 if [ -z "$COMMIT_MSG" ]; then
-  echo "❌ Commit cancelado. Mensagem vazia."
+  echo "❌ Mensagem de commit não pode ser vazia."
   exit 1
 fi
 
@@ -20,24 +20,27 @@ git add .
 # Faz commit
 git commit -m "$COMMIT_MSG"
 
-# Pergunta sobre TAG
-read -p "Deseja criar uma TAG? (s/n): " CREATE_TAG
+# Pergunta se deseja criar tag
+read -p "Deseja criar uma tag? (s/n): " CREATE_TAG
 
 if [[ "$CREATE_TAG" == "s" || "$CREATE_TAG" == "S" ]]; then
-  read -p "Digite o nome da TAG (ex: v1.0.0): " TAG_NAME
+  read -p "Digite o nome da tag (ex: v1.0.0): " TAG_NAME
 
   if [ -z "$TAG_NAME" ]; then
-    echo "❌ Nome da TAG vazio. Ignorando TAG."
-  else
-    git tag -a "$TAG_NAME" -m "$COMMIT_MSG"
-    echo "✅ TAG '$TAG_NAME' criada."
+    echo "❌ Nome da tag não pode ser vazio."
+    exit 1
   fi
+
+  git tag -a "$TAG_NAME" -m "Release $TAG_NAME"
+  echo "🏷️ Tag $TAG_NAME criada."
 fi
 
-# Push commit
+# Push branch
 git push
 
-# Push tags (se houver)
-git push --tags
+# Push tag (se existir)
+if [[ "$CREATE_TAG" == "s" || "$CREATE_TAG" == "S" ]]; then
+  git push origin "$TAG_NAME"
+fi
 
-echo "🚀 Push finalizado com sucesso!"
+echo "✅ Push finalizado com sucesso!"
