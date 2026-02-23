@@ -7,7 +7,12 @@ metadata:
 spec:
   containers:
   - image: nginx
-    name: jr
+    name: nginx
+  - image: busybox
+    name: busybox
+    args:
+    - sleep
+    - "600"  
   dnsPolicy: ClusterFirst
   restartPolicy: Always
 status: {}
