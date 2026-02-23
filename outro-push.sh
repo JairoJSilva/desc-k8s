@@ -76,3 +76,4 @@ else
     echo "⏭️  Push realizado sem criação de tag."
     echo "✅ Processo concluído!"
 fi
+## Só pra teste
